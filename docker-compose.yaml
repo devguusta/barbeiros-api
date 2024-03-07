@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  # dev:
+  #   container_name: nestjs_api_dev
+  #   image: nestjs-api-dev:1.0.0
+  #   build:
+  #     context: .
+  #     target: development
+  #     dockerfile: ./Dockerfile
+  #   command: yarn start:debug
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - 3000:3000
+  #     - 9229:9229
+  #   networks:
+  #     - guusta
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     - cartola-dev-db
+
+  barbeiros-dev-db:
+    image: postgres:15
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: BARBEIROS-APP
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./create-db.sql:/docker-entrypoint-initdb.d/create_database.sql
+    networks:
+      - guusta
+  # test-db:
+  #   image: postgres:13
+  #   ports:
+  #     - 5435:5432
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: root
+  #     POSTGRES_DB: nest-estudo
+  #   networks:
+  #     - guusta    
+networks:
+  guusta:
