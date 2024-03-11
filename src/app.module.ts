@@ -2,23 +2,34 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      database: process.env.DB_DATABASE,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      logging: false,
-      migrations: [__dirname + '/database/migrations/*{.js,.ts}'],
-      entities: [__dirname + '/database/entities{.js,.ts}'],
-      // synchronize:  true
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: () => ({
+        type: 'postgres',
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT),
+        database: process.env.DB_DATABASE,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        logging: false,
+        // migrations: ['dist/migrations/*.{ts,js}'],
+        // entities: ['dist/entities/*.{ts,js}'],
+        // // entities: [Users],
+        // // migrations: ['dist/migrations/*.{ts,js}'],
+        // migrationsTableName: 'typeorm_migrations',
+        migrationsTableName: 'migrations',
+        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        migrations: ['dist/db/migrations/*.js'],
+      }),
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
