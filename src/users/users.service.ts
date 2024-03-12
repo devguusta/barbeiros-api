@@ -34,6 +34,8 @@ export class UsersService {
         name: dto.name,
         password: hash,
         admin: false,
+        document: dto.document,
+        cellphone: dto.cellphone,
       });
       delete user.password;
 
