@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from './user.entity';
@@ -13,10 +17,17 @@ export class UsersService {
 
   async signup(dto: UserSignupDTO) {
     try {
+      const { email, document } = dto;
+
+      // const oldUser = await this.userRepository
+      //   .createQueryBuilder('user')
+      //   .where('user.email = :email OR user.document = :document', {
+      //     email,
+      //     document,
+      //   })
+      //   .getOne();
       const oldUser = await this.userRepository.findOne({
-        where: {
-          email: dto.email,
-        },
+        where: [{ email }, { document }],
       });
       console.log(oldUser);
       if (oldUser) {
@@ -37,13 +48,15 @@ export class UsersService {
         document: dto.document,
         cellphone: dto.cellphone,
       });
-      delete user.password;
+      delete user.password && delete user.admin && delete user.document;
 
       return user;
     } catch (error) {
       console.log(error);
 
-      throw error;
+      return new InternalServerErrorException({
+        message: error.message,
+      });
     }
   }
 }
