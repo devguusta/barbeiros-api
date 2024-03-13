@@ -20,13 +20,13 @@ export class Users {
   @Column({ name: 'document', nullable: false, unique: true })
   document: string;
 
-  @Column({ name: 'cellphone', nullable: false, unique: true })
+  @Column({ name: 'cellphone', nullable: false })
   cellphone: string;
 
   @Column({ name: 'barber', default: false })
   barber: boolean;
 
-  @Column({ name: 'password', nullable: false, unique: true })
+  @Column({ name: 'password', nullable: false })
   password: string;
 
   @CreateDateColumn({ name: 'created_at' })
