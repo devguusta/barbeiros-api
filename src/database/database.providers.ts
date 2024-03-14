@@ -9,7 +9,7 @@ export default new DataSource({
   database: process.env.DB_DATABASE,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  entities: [__dirname + '/../**/*.model.{js,ts}'],
   migrations: [__dirname + '/migrations/*.{js,ts}'],
   migrationsTableName: 'migrations',
   synchronize: true,

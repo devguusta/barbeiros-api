@@ -24,7 +24,7 @@ import { UsersModule } from './users/users.module';
         // // entities: [Users],
         // // migrations: ['dist/migrations/*.{ts,js}'],
         // migrationsTableName: 'typeorm_migrations',
-        entities: [__dirname + '/**/*.entity.{js,ts}'],
+        entities: [__dirname + '/**/*.model.{js,ts}'],
         migrations: [__dirname + '/migrations/*.{js,ts}'],
         migrationsTableName: 'migrations',
       }),
