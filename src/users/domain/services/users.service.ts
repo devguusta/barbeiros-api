@@ -15,7 +15,7 @@ export class UsersService implements IUserService {
     @InjectRepository(UsersModel)
     private readonly userRepository: Repository<UsersModel>,
   ) {}
-  async signup(userSignup: UserSignup) {
+  async signup(userSignup: UserSignup): Promise<void> {
     const { email, document } = userSignup;
 
     const oldUser = await this.userRepository.findOne({
