@@ -5,17 +5,17 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from './user.entity';
-import { UserSignupDTO } from './dtos/user_signup_dto';
+import { UsersModel } from './infra/models/user.model';
+import { UserSignup } from './domain/entities/user_signup.entity';
 import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(Users)
-    private readonly userRepository: Repository<Users>,
+    @InjectRepository(UsersModel)
+    private readonly userRepository: Repository<UsersModel>,
   ) {}
 
-  async signup(dto: UserSignupDTO) {
+  async signup(dto: UserSignup) {
     try {
       const { email, document } = dto;
 

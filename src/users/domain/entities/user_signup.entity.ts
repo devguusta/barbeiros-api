@@ -8,7 +8,7 @@ import {
   IsMobilePhone,
 } from 'class-validator';
 
-export class UserSignupDTO {
+export class UserSignup {
   @IsEmail()
   @IsNotEmpty()
   email: string;
