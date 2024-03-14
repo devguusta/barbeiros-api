@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserSignup } from './domain/entities/user_signup.entity';
-import { UsersService } from './users.service';
+import { UsersService } from './domain/services/users.service';
 
 @Controller('auth')
 export class UsersController {
