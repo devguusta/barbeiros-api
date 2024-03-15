@@ -9,12 +9,21 @@ import { UsersModel } from '../../infra/models/user.model';
 import { UserSignup } from '../entities/user_signup.entity';
 import * as bcrypt from 'bcrypt';
 import { IUserService } from './iuser_service';
+import { SignInDTO } from '../../dtos/sigin_dto';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UsersService implements IUserService {
   constructor(
     @InjectRepository(UsersModel)
     private readonly userRepository: Repository<UsersModel>,
+    private config: ConfigService,
+    private jwt: JwtService,
   ) {}
+  signIn(dto: SignInDTO): Promise<string> {
+    //TODO: ADICIONAR AQUI
+    throw new Error('Method not implemented.');
+  }
   async signup(userSignup: UserSignup): Promise<void> {
     const { email, document } = userSignup;
 
@@ -41,7 +50,7 @@ export class UsersService implements IUserService {
       cellphone: userSignup.cellphone,
     });
     delete user.password && delete user.admin && delete user.document;
-
+    console.log('aqui');
     return;
   }
   catch(error) {
@@ -50,5 +59,22 @@ export class UsersService implements IUserService {
     throw new InternalServerErrorException({
       message: error.message,
     });
+  }
+
+  async _signToken(dto: UsersModel): Promise<{ access_token: string }> {
+    const payload = {
+      sub: dto.id,
+      email: dto.email,
+      barber: dto.barber,
+      name: dto.name,
+    };
+    const secret = this.config.get('JWT_SECRET');
+    const token = await this.jwt.signAsync(payload, {
+      expiresIn: '15m',
+      secret: secret,
+    });
+    return {
+      access_token: token,
+    };
   }
 }
