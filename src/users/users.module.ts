@@ -4,8 +4,9 @@ import { UsersService } from './domain/services/users.service';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModel } from './infra/models/user.model';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersModel])],
+  imports: [TypeOrmModule.forFeature([UsersModel]), JwtModule.register({})],
 
   controllers: [UsersController],
   providers: [UsersService],

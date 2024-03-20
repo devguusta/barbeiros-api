@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -20,9 +21,35 @@ export class UsersService implements IUserService {
     private config: ConfigService,
     private jwt: JwtService,
   ) {}
-  signIn(dto: SignInDTO): Promise<string> {
-    //TODO: ADICIONAR AQUI
-    throw new Error('Method not implemented.');
+  async signIn(dto: SignInDTO): Promise<{ access_token: string }> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          email: dto.email,
+        },
+      });
+      if (!user) {
+        throw new ForbiddenException('Credentials invalid');
+      }
+      const isMatch = await bcrypt.compare(dto.password, user.password);
+      if (!isMatch) {
+        throw new ForbiddenException('Credentials invalid');
+      }
+
+      return this.signToken({
+        email: user.email,
+        barber: user.barber,
+        password: user.password,
+        name: user.name,
+        id: user.id,
+        cellphone: user.cellphone,
+        document: user.document,
+        createdAt: user.createdAt,
+        updateAt: user.updateAt,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
   async signup(userSignup: UserSignup): Promise<void> {
     const { email, document } = userSignup;
@@ -62,6 +89,23 @@ export class UsersService implements IUserService {
   }
 
   async _signToken(dto: UsersModel): Promise<{ access_token: string }> {
+    const payload = {
+      sub: dto.id,
+      email: dto.email,
+      barber: dto.barber,
+      name: dto.name,
+    };
+    const secret = this.config.get('JWT_SECRET');
+    const token = await this.jwt.signAsync(payload, {
+      expiresIn: '15m',
+      secret: secret,
+    });
+    return {
+      access_token: token,
+    };
+  }
+
+  async signToken(dto: UsersModel): Promise<{ access_token: string }> {
     const payload = {
       sub: dto.id,
       email: dto.email,
