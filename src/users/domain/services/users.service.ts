@@ -49,6 +49,7 @@ export class UsersService implements IUserService {
       });
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
   async signup(userSignup: UserSignup): Promise<void> {
@@ -83,9 +84,7 @@ export class UsersService implements IUserService {
   catch(error) {
     console.log(error);
 
-    throw new InternalServerErrorException({
-      message: error.message,
-    });
+    throw error;
   }
 
   async _signToken(dto: UsersModel): Promise<{ access_token: string }> {
