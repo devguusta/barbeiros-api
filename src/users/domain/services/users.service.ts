@@ -46,6 +46,7 @@ export class UsersService implements IUserService {
         document: user.document,
         createdAt: user.createdAt,
         updateAt: user.updateAt,
+        admin: user.admin,
       });
     } catch (error) {
       console.log(error);
