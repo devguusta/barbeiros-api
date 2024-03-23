@@ -26,6 +26,9 @@ export class UsersModel {
   @Column({ name: 'barber', default: false })
   barber: boolean;
 
+  @Column({ name: 'admin', default: false })
+  admin: boolean;
+
   @Column({ name: 'password', nullable: false })
   password: string;
 
