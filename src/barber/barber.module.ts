@@ -8,10 +8,12 @@ import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { JwtStrategy } from 'src/core/auth/strategy';
 import { UsersModel } from 'src/users/infra/models/user.model';
+import { ValidatorService } from 'src/core/validators/validators_service';
 dotenv.config();
 
 @Module({
   imports: [
+  
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '6000s' },
@@ -19,6 +21,6 @@ dotenv.config();
     TypeOrmModule.forFeature([AddressModel, BarberStoreModel, UsersModel]),
   ],
   controllers: [BarberController],
-  providers: [BarberService, JwtStrategy,]
+  providers: [BarberService, JwtStrategy, ValidatorService]
 })
 export class BarberModule {}

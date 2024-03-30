@@ -1,21 +1,25 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BarberStoreModel } from './infra/model/barber_store.model';
-import { Repository } from 'typeorm';
-import { BarberStore } from './domain/entities';
+import { Like, Repository } from 'typeorm';
+import { BarberStore, SearchBarberStore } from './domain/entities';
+import { ValidatorService } from 'src/core/validators/validators_service';
 
 @Injectable()
 export class BarberService {
     constructor(
         @InjectRepository(BarberStoreModel)
-        private repository: Repository<BarberStoreModel>
+        private repository: Repository<BarberStoreModel>,
+        private readonly validatorService: ValidatorService,
     ){
        
     }
 
     async signup(dto: BarberStore, owner_id: string, owner_name: string): Promise<BarberStore> {
         try {
-            console
+            if(!this.validatorService.validateCnpj(dto.document)) {
+                throw new BadRequestException('Invalid document');
+            }
             const hasBarber = await  this.repository.findOne({
                 where: {
                     document: dto.document
@@ -44,5 +48,22 @@ export class BarberService {
             throw error;
         }
 
+    }
+
+    async searchBarberByName(dto: SearchBarberStore): Promise<BarberStoreModel[]> {
+        try {
+            const barbers = await this.repository.createQueryBuilder('barber_store')
+            .where('barber_store.name ILIKE :name', { name: `%${dto.name}%` })
+            .orWhere('barber_store.document ILIKE :address', { document: `%${dto.document}%` })
+            .getMany();
+            if(!barbers) {
+                throw new BadRequestException('Barber not found');
+            }
+
+
+            return barbers;
+        } catch (error) {
+            throw error;
+        }
     }
 }
