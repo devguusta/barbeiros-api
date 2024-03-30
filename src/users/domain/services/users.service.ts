@@ -13,11 +13,13 @@ import { IUserService } from './iuser_service';
 import { SignInDTO } from '../../dtos/sigin_dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { ValidatorService } from 'src/core/validators/validators_service';
 @Injectable()
 export class UsersService implements IUserService {
   constructor(
     @InjectRepository(UsersModel)
     private readonly userRepository: Repository<UsersModel>,
+    private readonly validatorService: ValidatorService,
     private config: ConfigService,
     private jwt: JwtService,
   ) {}
@@ -46,6 +48,7 @@ export class UsersService implements IUserService {
         document: user.document,
         createdAt: user.createdAt,
         updateAt: user.updateAt,
+        admin: user.admin,
       });
     } catch (error) {
       console.log(error);
@@ -54,6 +57,14 @@ export class UsersService implements IUserService {
   }
   async signup(userSignup: UserSignup): Promise<void> {
     const { email, document } = userSignup;
+
+      if (!this.validatorService.validateCPF(document)) {
+        throw new BadRequestException({
+          message: 'Invalid document',
+          statusCode: 400,
+        });
+      }
+    
 
     const oldUser = await this.userRepository.findOne({
       where: [{ email }, { document }],
