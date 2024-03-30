@@ -17,6 +17,9 @@ export class AddressModel {
     @Column({ name: 'number', })
     number: string;
 
+    @Column({ name: 'state', })
+    state: string;
+
     @Column({ name: 'neighborhood', })
     neighborhood: string;
 

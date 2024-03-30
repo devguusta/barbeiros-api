@@ -21,6 +21,11 @@ import {
     @IsString()
     @IsNotEmpty()
     neighborhood: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(2)
+    state: string;
   
     @IsString()
     @IsNotEmpty()
