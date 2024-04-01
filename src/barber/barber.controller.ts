@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { JwtGuard } from 'src/core/auth/guard';
+import { JwtGuard } from '../core/auth/guard';
 import { BarberService } from './barber.service';
 import { BarberStore } from './domain/entities';
 @UseGuards(JwtGuard)

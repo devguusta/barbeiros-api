@@ -1,4 +1,4 @@
-import { AddressModel } from 'src/core/model/address.model';
+import { AddressModel } from '../../../core/model/address.model';
 import {
     Entity,
     PrimaryGeneratedColumn,
