@@ -13,7 +13,7 @@ import { IUserService } from './iuser_service';
 import { SignInDTO } from '../../dtos/sigin_dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { ValidatorService } from '../../../core/validators/validators_service';
+import { ValidatorService } from '../../../core/validators/validator_helper';
 @Injectable()
 export class UsersService implements IUserService {
   constructor(

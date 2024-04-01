@@ -1,4 +1,3 @@
-// cpf.service.ts
 
 import { Injectable } from '@nestjs/common';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
