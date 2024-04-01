@@ -8,7 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { JwtStrategy } from 'src/core/auth/strategy';
 import { UsersModel } from 'src/users/infra/models/user.model';
-import { ValidatorService } from '../core/validators/validator_helper';
+import { ValidatorHelper } from '../core/validators/validator_helper';
 dotenv.config();
 
 @Module({
@@ -21,6 +21,6 @@ dotenv.config();
     TypeOrmModule.forFeature([AddressModel, BarberStoreModel, UsersModel]),
   ],
   controllers: [BarberController],
-  providers: [BarberService, JwtStrategy, ValidatorService]
+  providers: [BarberService, JwtStrategy, ValidatorHelper]
 })
 export class BarberModule {}

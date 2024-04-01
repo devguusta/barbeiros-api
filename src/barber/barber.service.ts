@@ -3,21 +3,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BarberStoreModel } from './infra/model/barber_store.model';
 import { Like, Repository } from 'typeorm';
 import { BarberStore, SearchBarberStore } from './domain/entities';
-import { ValidatorService } from '../core/validators/validator_helper';
+import { ValidatorHelper } from '../core/validators/validator_helper';
 
 @Injectable()
 export class BarberService {
     constructor(
         @InjectRepository(BarberStoreModel)
         private repository: Repository<BarberStoreModel>,
-        private readonly validatorService: ValidatorService,
+        private readonly ValidatorHelper: ValidatorHelper,
     ){
        
     }
 
     async signup(dto: BarberStore, owner_id: string, owner_name: string): Promise<BarberStore> {
         try {
-            if(!this.validatorService.validateCnpj(dto.document)) {
+            if(!this.ValidatorHelper.validateCnpj(dto.document)) {
                 throw new BadRequestException('Invalid document');
             }
             const hasBarber = await  this.repository.findOne({

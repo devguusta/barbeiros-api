@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 
 @Injectable()
-export class ValidatorService {
+export class ValidatorHelper {
   validateCPF(document: string): boolean {
    
     const cpfDigitsOnly = document.replace(/[^\d]/g, '');
