@@ -19,7 +19,7 @@ export class UsersService implements IUserService {
   constructor(
     @InjectRepository(UsersModel)
     private readonly userRepository: Repository<UsersModel>,
-    private readonly ValidatorHelper: ValidatorHelper,
+    private readonly validatorHelper: ValidatorHelper,
     private config: ConfigService,
     private jwt: JwtService,
   ) {}
@@ -58,7 +58,7 @@ export class UsersService implements IUserService {
   async signup(userSignup: UserSignup): Promise<void> {
     const { email, document } = userSignup;
 
-      if (!this.ValidatorHelper.validateCPF(document)) {
+      if (!this.validatorHelper.validateCPF(document)) {
         throw new BadRequestException({
           message: 'Invalid document',
           statusCode: 400,

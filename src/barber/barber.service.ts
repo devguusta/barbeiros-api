@@ -10,14 +10,14 @@ export class BarberService {
     constructor(
         @InjectRepository(BarberStoreModel)
         private repository: Repository<BarberStoreModel>,
-        private readonly ValidatorHelper: ValidatorHelper,
+        private readonly validationService: ValidatorHelper,
     ){
        
     }
 
     async signup(dto: BarberStore, owner_id: string, owner_name: string): Promise<BarberStore> {
         try {
-            if(!this.ValidatorHelper.validateCnpj(dto.document)) {
+            if(!this.validationService.validateCnpj(dto.document)) {
                 throw new BadRequestException('Invalid document');
             }
             const hasBarber = await  this.repository.findOne({
