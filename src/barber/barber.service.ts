@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BarberStoreModel } from './infra/model/barber_store.model';
 import { Like, Repository } from 'typeorm';
 import { BarberStore, SearchBarberStore } from './domain/entities';
-import { ValidatorService } from 'src/core/validators/validators_service';
+import { ValidatorService } from '../core/validators/validators_service';
 
 @Injectable()
 export class BarberService {

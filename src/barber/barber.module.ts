@@ -8,7 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { JwtStrategy } from 'src/core/auth/strategy';
 import { UsersModel } from 'src/users/infra/models/user.model';
-import { ValidatorService } from 'src/core/validators/validators_service';
+import { ValidatorService } from '../core/validators/validators_service';
 dotenv.config();
 
 @Module({

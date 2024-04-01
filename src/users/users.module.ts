@@ -5,7 +5,7 @@ import { UsersService } from './domain/services/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModel } from './infra/models/user.model';
 import { JwtModule } from '@nestjs/jwt';
-import { ValidatorService } from 'src/core/validators/validators_service';
+import { ValidatorService } from '../core/validators/validators_service';
 @Module({
   imports: [TypeOrmModule.forFeature([UsersModel]), JwtModule.register({}), ],
 
