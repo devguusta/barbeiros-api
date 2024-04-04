@@ -13,7 +13,6 @@ dotenv.config();
 
 @Module({
   imports: [
-  
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '6000s' },
@@ -21,6 +20,6 @@ dotenv.config();
     TypeOrmModule.forFeature([AddressModel, BarberStoreModel, UsersModel]),
   ],
   controllers: [BarberController],
-  providers: [BarberService, JwtStrategy, ValidatorHelper]
+  providers: [BarberService, JwtStrategy, ValidatorHelper],
 })
 export class BarberModule {}
