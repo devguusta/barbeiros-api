@@ -7,7 +7,7 @@ import { UsersModel } from './infra/models/user.model';
 import { JwtModule } from '@nestjs/jwt';
 import { ValidatorHelper } from '../core/validators/validator_helper';
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersModel]), JwtModule.register({}), ],
+  imports: [TypeOrmModule.forFeature([UsersModel]), JwtModule.register({})],
 
   controllers: [UsersController],
   providers: [UsersService, ValidatorHelper],
