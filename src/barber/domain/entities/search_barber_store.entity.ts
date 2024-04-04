@@ -1,7 +1,17 @@
-import { IsString } from 'class-validator';
+import { MaxLength } from 'class-validator';
 
 export class SearchBarberStore {
   name?: string;
 
   document?: string;
+
+  street?: string;
+
+  number?: string;
+
+  neighborhood?: string;
+
+  state?: string;
+
+  cep?: string;
 }

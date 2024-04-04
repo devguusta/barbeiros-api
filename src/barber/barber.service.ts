@@ -9,6 +9,7 @@ import { BarberStoreModel } from './infra/model/barber_store.model';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { BarberStore, SearchBarberStore } from './domain/entities';
 import { ValidatorHelper } from '../core/validators/validator_helper';
+import { AddressModel } from 'src/core/model/address.model';
 
 @Injectable()
 export class BarberService {
@@ -59,7 +60,14 @@ export class BarberService {
   ): Promise<BarberStoreModel[]> {
     try {
       const barbers = await this.repository.find({
-        where: { name: ILike(`%${dto.name}%`) },
+        where: [
+          {
+            name: ILike(`%${dto.name}%`),
+          },
+          {
+            document: ILike(`%${dto.document}%`),
+          },
+        ],
       });
       if (barbers.length === 0) {
         throw new HttpException('Barber not found', HttpStatus.NO_CONTENT);
