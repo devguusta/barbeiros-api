@@ -2,7 +2,6 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -38,7 +37,7 @@ export class UsersService implements IUserService {
         throw new ForbiddenException('Credentials invalid');
       }
 
-      return this.signToken({
+      return this._signToken({
         email: user.email,
         barber: user.barber,
         password: user.password,
@@ -58,20 +57,18 @@ export class UsersService implements IUserService {
   async signup(userSignup: UserSignup): Promise<void> {
     const { email, document } = userSignup;
 
-      if (!this.validatorHelper.validateCPF(document)) {
-        throw new BadRequestException({
-          message: 'Invalid document',
-          statusCode: 400,
-        });
-      }
-    
+    if (!this.validatorHelper.validateCPF(document)) {
+      throw new BadRequestException({
+        message: 'Invalid document',
+        statusCode: 400,
+      });
+    }
 
     const oldUser = await this.userRepository.findOne({
       where: [{ email }, { document }],
     });
     console.log(oldUser);
     if (oldUser) {
-      console.log('ola');
       throw new BadRequestException({
         message: 'User already exists',
         statusCode: 400,
@@ -89,7 +86,7 @@ export class UsersService implements IUserService {
       cellphone: userSignup.cellphone,
     });
     delete user.password && delete user.admin && delete user.document;
-    console.log('aqui');
+
     return;
   }
   catch(error) {
@@ -99,23 +96,6 @@ export class UsersService implements IUserService {
   }
 
   async _signToken(dto: UsersModel): Promise<{ access_token: string }> {
-    const payload = {
-      sub: dto.id,
-      email: dto.email,
-      barber: dto.barber,
-      name: dto.name,
-    };
-    const secret = this.config.get('JWT_SECRET');
-    const token = await this.jwt.signAsync(payload, {
-      expiresIn: '15m',
-      secret: secret,
-    });
-    return {
-      access_token: token,
-    };
-  }
-
-  async signToken(dto: UsersModel): Promise<{ access_token: string }> {
     const payload = {
       sub: dto.id,
       email: dto.email,

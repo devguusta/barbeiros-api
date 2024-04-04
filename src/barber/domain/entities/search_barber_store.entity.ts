@@ -1,20 +1,7 @@
-import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-   
-    IsMobilePhone,
-} from 'class-validator';
-import { Address } from './address.entity';
+import { IsString } from 'class-validator';
 
 export class SearchBarberStore {
-    @IsString()
-    name: string;
+  name?: string;
 
-
-    @IsString()
-    document: string;
-
-
-
+  document?: string;
 }
