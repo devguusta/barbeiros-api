@@ -67,6 +67,15 @@ export class BarberService {
           {
             document: ILike(`%${dto.document}%`),
           },
+          {
+            address: {
+              state: ILike(`%${dto.state}%`),
+              street: ILike(`%${dto.street}%`),
+              neighborhood: ILike(`%${dto.neighborhood}%`),
+              number: ILike(`%${dto.number}%`),
+              cep: ILike(`%${dto.cep}%`),
+            },
+          },
         ],
       });
       if (barbers.length === 0) {
