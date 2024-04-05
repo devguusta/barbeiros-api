@@ -20,6 +20,9 @@ export class AddressModel {
   @Column({ name: 'state' })
   state: string;
 
+  @Column({ name: 'city' })
+  city: string;
+
   @Column({ name: 'neighborhood' })
   neighborhood: string;
 
