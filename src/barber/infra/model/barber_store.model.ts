@@ -41,4 +41,16 @@ export class BarberStoreModel {
   @OneToOne(() => AddressModel)
   @JoinColumn()
   address: AddressModel;
+
+  @Column({ name: 'interval_between_clients', nullable: true })
+  interval_between_clients: number;
+
+  @Column({ name: 'store_description', nullable: true })
+  store_description: string;
+
+  @Column({ name: 'opening_time', default: '9' })
+  opening_time: string;
+
+  @Column({ name: 'closing_time', default: '18' })
+  closing_time: string;
 }
