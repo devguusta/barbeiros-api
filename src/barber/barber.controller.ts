@@ -5,14 +5,19 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
   Query,
   Req,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from '../core/auth/guard';
-import { BarberService } from './barber.service';
-import { BarberStore, SearchBarberStore } from './domain/entities';
+import { BarberService } from './services/barber.service';
+import {
+  BarberStore,
+  SearchBarberStore,
+  UpdateScheduleBarberDto,
+} from './domain/entities';
 @UseGuards(JwtGuard)
 @Controller('barber')
 export class BarberController {
@@ -32,6 +37,17 @@ export class BarberController {
   @Get('')
   @HttpCode(HttpStatus.OK)
   get(@Query() param?: SearchBarberStore) {
-    return this.barberService.searchBarberByName(param);
+    return this.barberService.searchBarber(param);
+  }
+
+  @Put('work_time')
+  @HttpCode(HttpStatus.CREATED)
+  updateWorkTime(@Query() param: UpdateScheduleBarberDto, @Req() req) {
+    console.log(req.user);
+    const { barber } = req.user;
+    if (!barber) {
+      throw new UnauthorizedException('User is not a barber');
+    }
+    return this.barberService.updateWorkTime(param, req.user.id);
   }
 }

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BarberController } from './barber.controller';
-import { BarberService } from './barber.service';
+import { BarberService } from './services/barber.service';
 import { AddressModel } from '../core/model/address.model';
 import { BarberStoreModel } from './infra/model/barber_store.model';
 import { TypeOrmModule } from '@nestjs/typeorm';

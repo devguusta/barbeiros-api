@@ -3,21 +3,52 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BarberStoreModel } from './infra/model/barber_store.model';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
-import { BarberStore, SearchBarberStore } from './domain/entities';
-import { ValidatorHelper } from '../core/validators/validator_helper';
-import { AddressModel } from 'src/core/model/address.model';
+import { BarberStoreModel } from '../infra/model/barber_store.model';
+import { ILike, Repository } from 'typeorm';
+import {
+  BarberStore,
+  SearchBarberStore,
+  UpdateScheduleBarberDto,
+} from '../domain/entities';
+import { ValidatorHelper } from '../../core/validators/validator_helper';
+import { IBarberService } from './ibarber.service';
 
 @Injectable()
-export class BarberService {
+export class BarberService implements IBarberService {
   constructor(
     @InjectRepository(BarberStoreModel)
     private repository: Repository<BarberStoreModel>,
     private readonly validatorHelper: ValidatorHelper,
   ) {}
+  async updateWorkTime(
+    dto: UpdateScheduleBarberDto,
+    owner_id: string,
+  ): Promise<void> {
+    try {
+      const barber = await this.repository.findOne({
+        where: {
+          id: dto.barber_id,
+        },
+      });
+      barber.closing_time = dto.close_hour ?? barber.closing_time;
+      barber.opening_time = dto.start_hour ?? barber.opening_time;
+      if (!barber) {
+        throw new NotFoundException('resource not found');
+      }
+      if (barber.owner_id !== owner_id) {
+        throw new UnauthorizedException('you need to be owner of this barber');
+      }
+      await this.repository.save(barber);
+      return;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async signup(
     dto: BarberStore,
@@ -55,9 +86,7 @@ export class BarberService {
     }
   }
 
-  async searchBarberByName(
-    dto: SearchBarberStore,
-  ): Promise<BarberStoreModel[]> {
+  async searchBarber(dto: SearchBarberStore): Promise<BarberStoreModel[]> {
     try {
       const barbers = await this.repository.find({
         where: [
