@@ -1,12 +1,9 @@
-import { AddressModel } from '../../../core/model/address.model';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
-  OneToOne,
 } from 'typeorm';
 
 @Entity({ name: 'schedule_barber' })
@@ -29,7 +26,6 @@ export class ScheduleBarberModel {
   @UpdateDateColumn({ name: 'update_at' })
   updateAt: string;
 
-  @OneToOne(() => AddressModel)
-  @JoinColumn()
-  address: AddressModel;
+  @Column({ name: 'canceled', default: false })
+  canceled: boolean;
 }
