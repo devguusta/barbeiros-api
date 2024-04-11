@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateScheduleBarberDto {
+export class UpdateWorkTimeDto {
   start_hour?: string;
 
   close_hour?: string;

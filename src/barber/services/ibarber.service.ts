@@ -1,7 +1,7 @@
 import {
   BarberStore,
   SearchBarberStore,
-  UpdateScheduleBarberDto,
+  UpdateWorkTimeDto,
 } from '../domain/entities';
 import { BarberStoreModel } from '../infra/model/barber_store.model';
 
@@ -13,7 +13,7 @@ export abstract class IBarberService {
   ): Promise<BarberStore>;
   abstract searchBarber(dto: SearchBarberStore): Promise<BarberStoreModel[]>;
   abstract updateWorkTime(
-    dto: UpdateScheduleBarberDto,
+    dto: UpdateWorkTimeDto,
     owner_id: string,
   ): Promise<void>;
 }

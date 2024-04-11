@@ -16,7 +16,7 @@ import { BarberService } from './services/barber.service';
 import {
   BarberStore,
   SearchBarberStore,
-  UpdateScheduleBarberDto,
+  UpdateWorkTimeDto,
 } from './domain/entities';
 @UseGuards(JwtGuard)
 @Controller('barber')
@@ -42,7 +42,7 @@ export class BarberController {
 
   @Put('work_time')
   @HttpCode(HttpStatus.CREATED)
-  updateWorkTime(@Query() param: UpdateScheduleBarberDto, @Req() req) {
+  updateWorkTime(@Query() param: UpdateWorkTimeDto, @Req() req) {
     console.log(req.user);
     const { barber } = req.user;
     if (!barber) {

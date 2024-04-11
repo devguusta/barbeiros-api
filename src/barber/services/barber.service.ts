@@ -12,7 +12,7 @@ import { ILike, Repository } from 'typeorm';
 import {
   BarberStore,
   SearchBarberStore,
-  UpdateScheduleBarberDto,
+  UpdateWorkTimeDto,
 } from '../domain/entities';
 import { ValidatorHelper } from '../../core/validators/validator_helper';
 import { IBarberService } from './ibarber.service';
@@ -25,7 +25,7 @@ export class BarberService implements IBarberService {
     private readonly validatorHelper: ValidatorHelper,
   ) {}
   async updateWorkTime(
-    dto: UpdateScheduleBarberDto,
+    dto: UpdateWorkTimeDto,
     owner_id: string,
   ): Promise<void> {
     try {
