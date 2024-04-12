@@ -11,19 +11,63 @@ import { BarberStoreModel } from '../infra/model/barber_store.model';
 import { ILike, Repository } from 'typeorm';
 import {
   BarberStore,
+  ScheduleCutBarberDto,
   SearchBarberStore,
   UpdateWorkTimeDto,
 } from '../domain/entities';
 import { ValidatorHelper } from '../../core/validators/validator_helper';
 import { IBarberService } from './ibarber.service';
+import { ScheduleBarberModel } from '../infra/model/schedule_barber.model';
 
 @Injectable()
 export class BarberService implements IBarberService {
   constructor(
     @InjectRepository(BarberStoreModel)
     private repository: Repository<BarberStoreModel>,
+    @InjectRepository(ScheduleBarberModel)
+    private scheduleRepository: Repository<ScheduleBarberModel>,
     private readonly validatorHelper: ValidatorHelper,
   ) {}
+  async scheduleBarber(
+    dto: ScheduleCutBarberDto,
+  ): Promise<ScheduleBarberModel> {
+    try {
+      console.log('olaaa', dto.barber_id);
+      const existingAppointments = await this.scheduleRepository.find({
+        where: {
+          barber_id: dto.barber_id,
+        },
+      });
+      console.log('existingAppointments', existingAppointments);
+      if (existingAppointments.length > 0) {
+        console.log('aqui');
+        // Verificar se há algum agendamento existente dentro de uma hora da nova data e hora
+        const conflictingAppointment = existingAppointments.find(
+          (appointment) =>
+            Math.abs(
+              appointment.schedule_date.getTime() -
+                new Date(dto.schedule_date).getTime(),
+            ) <
+            60 * 60 * 1000,
+        );
+        if (conflictingAppointment) {
+          throw new BadRequestException(
+            'Já existe um corte agendado para esse horário',
+          );
+        }
+      }
+      const schedule = await this.scheduleRepository.save({
+        barber_id: dto.barber_id,
+        client_id: dto.client_id,
+        schedule_date: dto.schedule_date,
+      });
+      console.log('aquii', schedule);
+      return schedule;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
   async updateWorkTime(
     dto: UpdateWorkTimeDto,
     owner_id: string,

@@ -9,6 +9,7 @@ import * as dotenv from 'dotenv';
 import { JwtStrategy } from '../core/auth/strategy';
 import { UsersModel } from '../users/infra/models/user.model';
 import { ValidatorHelper } from '../core/validators/validator_helper';
+import { ScheduleBarberModel } from './infra/model/schedule_barber.model';
 dotenv.config();
 
 @Module({
@@ -17,7 +18,12 @@ dotenv.config();
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '6000s' },
     }),
-    TypeOrmModule.forFeature([AddressModel, BarberStoreModel, UsersModel]),
+    TypeOrmModule.forFeature([
+      AddressModel,
+      BarberStoreModel,
+      UsersModel,
+      ScheduleBarberModel,
+    ]),
   ],
   controllers: [BarberController],
   providers: [BarberService, JwtStrategy, ValidatorHelper],

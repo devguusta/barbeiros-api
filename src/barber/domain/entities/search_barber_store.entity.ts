@@ -1,5 +1,3 @@
-import { MaxLength } from 'class-validator';
-
 export class SearchBarberStore {
   name?: string;
 

@@ -24,6 +24,7 @@ export class UsersService implements IUserService {
   ) {}
   async signIn(dto: SignInDTO): Promise<{ access_token: string }> {
     try {
+      console.log(new Date());
       const user = await this.userRepository.findOne({
         where: {
           email: dto.email,

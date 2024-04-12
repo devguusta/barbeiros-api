@@ -17,9 +17,6 @@ export class ScheduleBarberModel {
   @Column({ name: 'client_id' })
   client_id: string;
 
-  @Column({ name: 'schedule_date' })
-  owner_name: Date;
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
 
@@ -28,4 +25,7 @@ export class ScheduleBarberModel {
 
   @Column({ name: 'canceled', default: false })
   canceled: boolean;
+
+  @Column({ type: 'timestamptz' })
+  schedule_date: Date;
 }

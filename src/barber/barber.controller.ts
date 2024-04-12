@@ -15,6 +15,7 @@ import { JwtGuard } from '../core/auth/guard';
 import { BarberService } from './services/barber.service';
 import {
   BarberStore,
+  ScheduleCutBarberDto,
   SearchBarberStore,
   UpdateWorkTimeDto,
 } from './domain/entities';
@@ -49,5 +50,19 @@ export class BarberController {
       throw new UnauthorizedException('User is not a barber');
     }
     return this.barberService.updateWorkTime(param, req.user.id);
+  }
+
+  @Post('schedule')
+  @HttpCode(HttpStatus.OK)
+  scheduleBarber(@Body() dto: ScheduleCutBarberDto, @Req() req) {
+    console.log(req.user);
+    const { id } = req.user;
+    const scheduleBarber = {
+      barber_id: dto.barber_id,
+      schedule_date: dto.schedule_date,
+      client_id: id,
+    };
+
+    return this.barberService.scheduleBarber(scheduleBarber);
   }
 }
