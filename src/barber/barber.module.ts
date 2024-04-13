@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BarberController } from './barber.controller';
+
 import { BarberService } from './services/barber.service';
 import { AddressModel } from '../core/model/address.model';
 import { BarberStoreModel } from './infra/model/barber_store.model';
@@ -10,6 +10,8 @@ import { JwtStrategy } from '../core/auth/strategy';
 import { UsersModel } from '../users/infra/models/user.model';
 import { ValidatorHelper } from '../core/validators/validator_helper';
 import { ScheduleBarberModel } from './infra/model/schedule_barber.model';
+import { BarberAdminService } from './services/barber_admin.service';
+import { BarberAdminController, BarberController } from './controllers';
 dotenv.config();
 
 @Module({
@@ -25,7 +27,7 @@ dotenv.config();
       ScheduleBarberModel,
     ]),
   ],
-  controllers: [BarberController],
-  providers: [BarberService, JwtStrategy, ValidatorHelper],
+  controllers: [BarberController, BarberAdminController],
+  providers: [BarberService, JwtStrategy, ValidatorHelper, BarberAdminService],
 })
 export class BarberModule {}
