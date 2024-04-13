@@ -3,17 +3,14 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BarberStoreModel } from '../infra/model/barber_store.model';
-import { ILike, Repository } from 'typeorm';
+import { DataSource, ILike, Repository } from 'typeorm';
 import {
   BarberStore,
   ScheduleCutBarberDto,
   SearchBarberStore,
-  UpdateWorkTimeDto,
 } from '../domain/entities';
 import { ValidatorHelper } from '../../core/validators/validator_helper';
 import { IBarberService } from './ibarber.service';
@@ -27,12 +24,15 @@ export class BarberService implements IBarberService {
     @InjectRepository(ScheduleBarberModel)
     private scheduleRepository: Repository<ScheduleBarberModel>,
     private readonly validatorHelper: ValidatorHelper,
+    private dataSource: DataSource,
   ) {}
   async scheduleBarber(
     dto: ScheduleCutBarberDto,
   ): Promise<ScheduleBarberModel> {
+    const queryRunner = this.dataSource.createQueryRunner();
     try {
-      console.log('olaaa', dto.barber_id);
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
       const existingAppointments = await this.scheduleRepository.find({
         where: {
           barber_id: dto.barber_id,
@@ -40,7 +40,6 @@ export class BarberService implements IBarberService {
       });
       console.log('existingAppointments', existingAppointments);
       if (existingAppointments.length > 0) {
-        console.log('aqui');
         // Verificar se há algum agendamento existente dentro de uma hora da nova data e hora
         const conflictingAppointment = existingAppointments.find(
           (appointment) =>
@@ -56,41 +55,21 @@ export class BarberService implements IBarberService {
           );
         }
       }
-      const schedule = await this.scheduleRepository.save({
+
+      const schedule = await queryRunner.manager.save(ScheduleBarberModel, {
         barber_id: dto.barber_id,
         client_id: dto.client_id,
         schedule_date: dto.schedule_date,
       });
-      console.log('aquii', schedule);
+      await queryRunner.commitTransaction();
+
       return schedule;
     } catch (error) {
       console.log(error);
+      await queryRunner.rollbackTransaction();
       throw error;
-    }
-  }
-  async updateWorkTime(
-    dto: UpdateWorkTimeDto,
-    owner_id: string,
-  ): Promise<void> {
-    try {
-      const barber = await this.repository.findOne({
-        where: {
-          id: dto.barber_id,
-        },
-      });
-      barber.closing_time = dto.close_hour ?? barber.closing_time;
-      barber.opening_time = dto.start_hour ?? barber.opening_time;
-      if (!barber) {
-        throw new NotFoundException('resource not found');
-      }
-      if (barber.owner_id !== owner_id) {
-        throw new UnauthorizedException('you need to be owner of this barber');
-      }
-      await this.repository.save(barber);
-      return;
-    } catch (error) {
-      console.log(error);
-      throw error;
+    } finally {
+      await queryRunner.release();
     }
   }
 
